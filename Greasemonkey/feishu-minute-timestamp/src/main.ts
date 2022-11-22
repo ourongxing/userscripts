@@ -12,28 +12,43 @@ function formatTime(t: string) {
   } else return time[0] ?? 0
 }
 
-function main() {
+function delay(t: number) {
+  return new Promise(resolve => setTimeout(resolve, t))
+}
+
+async function delayBreak(
+  times: number,
+  interval: number,
+  f: () => boolean | Promise<boolean>
+) {
+  for (let i = 0; i < times; i++) {
+    if (await f()) return true
+    await delay(interval)
+  }
+  return false
+}
+
+async function main() {
   const url = new URL(window.location.href)
   const { searchParams } = url
   const timeStr = searchParams.get("t") ?? "0"
-  const hasT = searchParams.has("t")
   const time = formatTime(timeStr)
-  let times = 0
-  const interval = setInterval(() => {
-    if (++times > 30) clearInterval(interval)
-    const video = document.querySelector("video")
-    if (video) {
-      clearInterval(interval)
-      if (hasT) {
-        video.onloadeddata = () => {
-          video.currentTime = time
-        }
+  const success = await delayBreak(
+    30,
+    100,
+    () => !!document.querySelector("video")
+  )
+  if (success) {
+    const video = document.querySelector("video")!
+    if (searchParams.has("t")) {
+      video.onloadeddata = () => {
+        video.currentTime = time
       }
-      video.addEventListener("pause", function () {
-        window.history.replaceState(null, "", `?t=${video.currentTime}`)
-      })
     }
-  }, 200)
+    video.addEventListener("pause", function () {
+      window.history.replaceState(null, "", `?t=${video.currentTime}`)
+    })
+  }
 }
 
 main()

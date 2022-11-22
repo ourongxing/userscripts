@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       feishu-minute-timestamp
 // @namespace  npm/vite-plugin-monkey
-// @version    0.1.0
+// @version    1.0.0
 // @author     ourongxing
 // @icon       https://testmnbbs.oss-cn-zhangjiakou.aliyuncs.com/pic/20221122202518.png?x-oss-process=base_webp
 // @match      https://*.feishu.cn/minutes/*
@@ -22,30 +22,39 @@
     } else
       return (_a = time[0]) != null ? _a : 0;
   }
-  function main() {
+  function delay(t) {
+    return new Promise((resolve) => setTimeout(resolve, t));
+  }
+  async function delayBreak(times, interval, f) {
+    for (let i = 0; i < times; i++) {
+      if (await f())
+        return true;
+      await delay(interval);
+    }
+    return false;
+  }
+  async function main() {
     var _a;
     const url = new URL(window.location.href);
     const { searchParams } = url;
     const timeStr = (_a = searchParams.get("t")) != null ? _a : "0";
-    const hasT = searchParams.has("t");
     const time = formatTime(timeStr);
-    let times = 0;
-    const interval = setInterval(() => {
-      if (++times > 30)
-        clearInterval(interval);
+    const success = await delayBreak(
+      30,
+      100,
+      () => !!document.querySelector("video")
+    );
+    if (success) {
       const video = document.querySelector("video");
-      if (video) {
-        clearInterval(interval);
-        if (hasT) {
-          video.onloadeddata = () => {
-            video.currentTime = time;
-          };
-        }
-        video.addEventListener("pause", function() {
-          window.history.replaceState(null, "", `?t=${video.currentTime}`);
-        });
+      if (searchParams.has("t")) {
+        video.onloadeddata = () => {
+          video.currentTime = time;
+        };
       }
-    }, 200);
+      video.addEventListener("pause", function() {
+        window.history.replaceState(null, "", `?t=${video.currentTime}`);
+      });
+    }
   }
   main();
 })();
