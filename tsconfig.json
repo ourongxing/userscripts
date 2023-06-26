@@ -17,10 +17,5 @@
       "@shared/*": ["shared/*"]
     }
   },
-  "include": [
-    "packages/**/*.ts",
-    "shared/**/*.ts",
-    "vite-env.d.ts",
-    "viteConfig.ts"
-  ]
+  "include": ["packages/**/*.ts", "shared/**/*.ts", "vite-env.d.ts"]
 }
