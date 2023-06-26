@@ -8,6 +8,9 @@
 时间戳格式支持 `?t=99` 和 `?t=1:39` 两种。
 
 ### 不思议搜索
+
+> [v0.0.1 点击安装](https://raw.githubusercontent.com/ourongxing/userscripts/main/packages/busiyi-search/dist/busiyi-search.user.js)
+
 通过一个特定的 query key，串联起所有的站内搜索。
 
 比如 [www.google.com##ourongxing](www.google.com##ourongxing)，[www.google.com??ourongxing](www.google.com??ourongxing) 或者 [www.google.com?bsy=ourongxing](www.google.com?bsy=ourongxing) 就可以在 Google 中搜索 ourongxing。可以根据实际情况选择写法。大多数时候都可以使用 `##`，除非已经有 hash 参数。
