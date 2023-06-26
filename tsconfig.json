@@ -14,8 +14,9 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@shared": ["shared/index.ts"],
       "@shared/*": ["shared/*"]
     }
   },
-  "include": ["packages/**/*.ts", "shared/**/*.ts", "vite-env.d.ts"]
+  "include": ["packages/**/*.ts", "shared/**/*.ts", "vite-env.d.ts", "./*.ts"]
 }
